@@ -7,7 +7,7 @@
 
 {% block content %}
 
-    <form action="">
+    <form action="{% url 'recommendation' %}">
         <label for="tickersymbol">Ticker Symbol:</label><br>
         <input type="text" id="tickersymbol" name="tickersymbol" value=""><br>
         <input type="submit" value="Submit">
