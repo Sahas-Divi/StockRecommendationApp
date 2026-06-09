@@ -7,10 +7,57 @@
 
 {% block content %}
 
-    <form action="{% url 'recommendation' %}">
-        <label for="tickersymbol">Ticker Symbol:</label><br>
-        <input type="text" id="tickersymbol" name="tickersymbol" value=""><br>
-        <input type="submit" value="Submit">
+<main class="hero">
+    <div class="hero-eyebrow">
+        <span class="pulse-dot"></span>
+        Market Intelligence
+    </div>
+
+    <h1 class="hero-title">
+        Uncover the story<br>
+        <em>behind the stock</em>
+    </h1>
+
+    <p class="hero-sub">
+        Enter any ticker symbol and get AI-powered insights, trends, and recommendations in seconds.
+    </p>
+
+    <form class="ticker-form" method="POST" action="{% url 'recommendation' %}">
+        {% csrf_token %}
+        <div class="input-wrapper">
+            <span class="input-icon">$</span>
+            <input
+                type="text"
+                id="tickersymbol"
+                name="tickersymbol"
+                placeholder="AAPL, TSLA, NVDA…"
+                autocomplete="off"
+                spellcheck="false"
+            >
+        </div>
+        <button type="submit" class="submit-btn">
+            <span>Analyse</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
     </form>
+
+    <div class="ticker-chips">
+        <span class="chip-label">Popular:</span>
+        <button class="chip" type="button" onclick="fillTicker('AAPL')">AAPL</button>
+        <button class="chip" type="button" onclick="fillTicker('TSLA')">TSLA</button>
+        <button class="chip" type="button" onclick="fillTicker('NVDA')">NVDA</button>
+        <button class="chip" type="button" onclick="fillTicker('MSFT')">MSFT</button>
+        <button class="chip" type="button" onclick="fillTicker('AMZN')">AMZN</button>
+    </div>
+</main>
+
+<script>
+    function fillTicker(symbol) {
+        document.getElementById('tickersymbol').value = symbol;
+        document.getElementById('tickersymbol').focus();
+    }
+</script>
 
 {% endblock%}
