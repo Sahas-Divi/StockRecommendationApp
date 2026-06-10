@@ -36,25 +36,36 @@ with open(metadata_path, "r") as f:
     metadata = json.load(f)
 
 model.summary()
-print(metadata)
+# print(metadata)
 
 print("Scaler type:", type(scalers))
 
-if isinstance(scalers, dict):
-    print("Scaler keys:", scalers.keys())
-else:
-    print(scalers)
+# if isinstance(scalers, dict):
+#     print("Scaler keys:", scalers.keys())
+# else:
+#     print(scalers)
 
 
 def calculate_lstm_math_model(ticker_symbol):
+    # FIX 1: Pass multi_level_index=False to force flat, standard columns
+    df = yf.download(
+        ticker_symbol, 
+        period="6mo", 
+        interval="1d", 
+        auto_adjust=True, 
+        multi_level_index=False
+    )
+    
+    if df.empty:
+        raise ValueError(f"No data returned for ticker {ticker_symbol}")
 
-    df = yf.download(ticker_symbol, period="6mo", interval="1d", auto_adjust=True)
+    # FIX 2: Drop any incomplete live rows (e.g., current day pre-market/live data with NaNs)
+    df.dropna(inplace=True)
 
-    # 2. Add '.copy()' to eliminate potential SettingWithCopy warnings
+    # 2. Safely isolate the structural features
     df = df[["Open", "High", "Low", "Close", "Volume"]].copy()
 
-    # 3. Inject LLM Scores (Using 0.0 as a neutral placeholder for testing)
-    # In production, replace this with a dynamic array of your daily LLM news scores (-1 to +1)
+    # 3. Inject LLM Scores (Placeholder)
     df["Sentiment"] = 0.0
 
     # 4. Extract trailing sequence window
@@ -73,7 +84,7 @@ def calculate_lstm_math_model(ticker_symbol):
     X = latest_60_scaled.reshape(1, 60, 6)
 
     # 8. Inference Execution
-    raw_prediction = model.predict(X, verbose=0)  # verbose=0 suppresses console log clutter
+    raw_prediction = model.predict(X, verbose=0)
 
     # 9. Invert target back into currency space
     predicted_price = scalers["target_scaler"].inverse_transform(raw_prediction)[0][0]

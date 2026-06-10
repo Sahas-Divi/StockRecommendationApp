@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Recommendation
+{% endblock %}
+
+{% block content %}
+
+<main class="result-page">
+
+    <div class="result-eyebrow">
+        <span class="pulse-dot"></span>
+        Analysis Complete
+    </div>
+
+    <p class="result-label">Our recommendation</p>
+
+    <div class="verdict-wrap">
+        <div class="verdict-ring">
+            <svg class="ring-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="60" cy="60" r="54" stroke="rgba(99,179,237,0.08)" stroke-width="1.5"/>
+                <circle class="ring-arc" cx="60" cy="60" r="54" stroke="#63b3ed" stroke-width="1.5"
+                        stroke-dasharray="339.3" stroke-dashoffset="339.3" stroke-linecap="round"
+                        transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="verdict-text" id="verdict-text">
+                <span class="verdict-char" aria-hidden="true"></span>
+            </div>
+        </div>
+        <p class="verdict-answer" id="verdict-answer">{{ recommendation_answer }}</p>
+    </div>
+
+    <div class="reason-card" id="reason-card">
+        <div class="reason-header">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM7.25 5.25a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0v-3.5zm.75 6.5a.75.75 0 110-1.5.75.75 0 010 1.5z" fill="currentColor"/>
+            </svg>
+            Reasoning
+        </div>
+        <p class="reason-body">{{ reason }}</p>
+    </div>
+
+    <a href="javascript:history.back()" class="back-btn">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M13 8H3M3 8L7 4M3 8L7 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Analyse another
+    </a>
+
+</main>
+
+<script>
+(function () {
+    const answer = document.getElementById('verdict-answer').textContent.trim();
+    const display = document.getElementById('verdict-text');
+    const arc = document.querySelector('.ring-arc');
+    const reasonCard = document.getElementById('reason-card');
+
+    const isBuy  = /buy/i.test(answer);
+    const isSell = /sell/i.test(answer);
+    const isHold = /hold/i.test(answer);
+
+    const color = isBuy ? '#4ade80' : isSell ? '#f87171' : '#f6c90e';
+    const icon  = isBuy ? '▲' : isSell ? '▼' : '◆';
+
+    arc.style.stroke = color;
+    display.style.color = color;
+    display.style.textShadow = `0 0 28px ${color}88`;
+
+    document.querySelector('.result-page').classList.add(
+        isBuy ? 'verdict-buy' : isSell ? 'verdict-sell' : 'verdict-hold'
+    );
+
+    const circumference = 339.3;
+    let progress = 0;
+    const duration = 900;
+    const start = performance.now();
+
+    function animateRing(ts) {
+        const t = Math.min((ts - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        arc.style.strokeDashoffset = circumference * (1 - ease);
+        if (t < 1) requestAnimationFrame(animateRing);
+        else {
+            display.innerHTML = `<span class="verdict-char">${icon}</span>`;
+            display.querySelector('.verdict-char').style.animation = 'iconPop .4s cubic-bezier(.34,1.56,.64,1) both';
+            setTimeout(() => {
+                reasonCard.style.animation = 'fadeUp .6s ease both';
+                reasonCard.style.opacity = '1';
+            }, 200);
+        }
+    }
+
+    requestAnimationFrame(animateRing);
+})();
+</script>
+
+{% endblock %}
