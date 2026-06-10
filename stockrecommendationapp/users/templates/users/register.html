@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Create Account
+{% endblock %}
+
+{% block content %}
+
+<main class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <div class="auth-icon">◈</div>
+            <h1 class="auth-title">Create your account</h1>
+            <p class="auth-sub">Start making smarter investment decisions today.</p>
+        </div>
+
+        <form class="auth-form" action="{% url 'sign-up' %}" method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                        <p class="form-error-msg">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="field-group {% if field.errors %}field-error{% endif %}">
+                    <label class="field-label" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <p class="field-hint">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="field-error-msg">
+                            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM7.25 5.25a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0v-3.5zm.75 6.5a.75.75 0 110-1.5.75.75 0 010 1.5z" fill="currentColor"/>
+                            </svg>
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="auth-submit">
+                <span>Create account</span>
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+
+        </form>
+
+        <p class="auth-footer">
+            Already have an account?
+            <a href="{% url 'sign-in' %}" class="auth-link">Sign in</a>
+        </p>
+
+    </div>
+
+</main>
+
+{% endblock %}

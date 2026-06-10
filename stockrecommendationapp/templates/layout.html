@@ -25,15 +25,19 @@
         </div>
 
         <div class="navbar-links">
-            <a href="" class="nav-btn signup-btn">
+            {% if not user.is_authenticated %}
+            <a href="{% url "sign-up" %}" class="nav-btn signup-btn">
                 <span>Sign Up</span>
             </a>
-            <a href="" class="nav-btn signin-btn">
+            <a href="{% url "sign-in" %}" class="nav-btn signin-btn">
                 <span>Sign In</span>
             </a>
-            <a href="" class="nav-btn signout-btn">
+            {% endif %}
+            {% if user.is_authenticated %}
+            <a href="{% url "sign-out" %}" class="nav-btn signout-btn">
                 <span>Sign Out</span>
             </a>
+            {% endif %}
         </div>
     </nav>
 
