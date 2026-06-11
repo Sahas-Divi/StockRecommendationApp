@@ -22,26 +22,26 @@
         Enter any ticker symbol and get AI-powered insights, trends, and recommendations in seconds.
     </p>
 
-    <form class="ticker-form" method="POST" action="{% url 'recommendation' %}">
-        {% csrf_token %}
-        <div class="input-wrapper">
-            <span class="input-icon">$</span>
-            <input
-                type="text"
-                id="tickersymbol"
-                name="tickersymbol"
-                placeholder="AAPL, TSLA, NVDA…"
-                autocomplete="off"
-                spellcheck="false"
-            >
-        </div>
-        <button type="submit" class="submit-btn">
-            <span>Analyse</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-    </form>
+    <form class="ticker-form" method="POST" action="{% url 'recommendation' %}" id="ticker-form">
+    {% csrf_token %}
+    <div class="input-wrapper">
+        <span class="input-icon">$</span>
+        <input
+            type="text"
+            id="tickersymbol"
+            name="tickersymbol"
+            placeholder="AAPL, TSLA, NVDA…"
+            autocomplete="off"
+            spellcheck="false"
+        >
+    </div>
+    <button type="submit" class="submit-btn" id="submit-btn">
+        <span>Analyse</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+</form>
 
     <div class="ticker-chips">
         <span class="chip-label">Popular:</span>
@@ -58,6 +58,11 @@
         document.getElementById('tickersymbol').value = symbol;
         document.getElementById('tickersymbol').focus();
     }
+    document.getElementById('ticker-form').addEventListener('submit', function () {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.querySelector('span').textContent = 'Analysing…';
+    });
 </script>
 
 {% endblock%}

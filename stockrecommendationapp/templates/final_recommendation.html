@@ -40,7 +40,8 @@
         <p class="reason-body">{{ reason }}</p>
     </div>
 
-    <a href="javascript:history.back()" class="back-btn">
+    {% comment %} href="javascript:history.back()" {% endcomment %} 
+    <a href="{% url 'home'%}" class="back-btn">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M13 8H3M3 8L7 4M3 8L7 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
