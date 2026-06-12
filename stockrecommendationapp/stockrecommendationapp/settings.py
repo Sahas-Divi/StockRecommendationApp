@@ -121,3 +121,13 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_URL = 'static/'
+
+
+#cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-suffix',
+    }
+}
